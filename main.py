@@ -1,0 +1,22 @@
+from fastapi import FastAPI, File, UploadFile
+app = FastAPI()
+@app.post("/files/")
+async def create_file(file: bytes = File(...)):
+    return {"file_size": len(file)}
+
+@app.post("/uploadfile/")
+async def create_upload_file(file: UploadFile = File(...)):
+
+    import requests
+    test_file = open("my_file.txt", "rb")
+    test_url = "http://httpbin.org/post"
+    test_response = requests.post(test_url, files = {"form_field_name": test_file})
+    if test_response.ok:
+        print("Upload completed successfully!")
+        print(test_response.text)
+    else:
+         print("Something went wrong!")
+    
+    return {"filename": file.filename}
+
+
